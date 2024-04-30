@@ -37,7 +37,7 @@ from aylak.rich.console import Console
 
 console = Console()
 
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 
 
 class PathIsFolderError(Exception):
@@ -109,17 +109,15 @@ class AioPM2:
         pass
 
     async def execute_command(self, cmd: List[str]) -> tuple[str, str]:
-        try:
-            process = await asyncio.create_subprocess_exec(
-                *cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-            )
-            stdout, stderr = await process.communicate()
-            if process.returncode != 0:
-                raise Exception(f"Command failed with error: {stderr.decode()}")
-            return stdout.decode(), stderr.decode()
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            return "", str(e)
+        process = await asyncio.create_subprocess_shell(
+            " ".join(cmd),
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        stdout, stderr = await process.communicate()
+        if process.returncode != 0:
+            raise Exception(f"Command failed with error: {stderr.decode()}")
+        return stdout.decode(), stderr.decode()
 
     async def list(self) -> List[PM2Process]:
         stdout, stderr = await self.execute_command(self.COMMAND + ["jlist"])
@@ -215,17 +213,13 @@ class PM2:
         pass
 
     def execute_command(self, cmd: List[str]) -> tuple[str, str]:
-        try:
-            process = subprocess.Popen(
-                cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-            )
-            stdout, stderr = process.communicate()
-            if process.returncode != 0:
-                raise Exception(f"Command failed with error: {stderr.decode()}")
-            return stdout.decode(), stderr.decode()
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            return "", str(e)
+        process = subprocess.Popen(
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
+        )
+        stdout, stderr = process.communicate()
+        if process.returncode != 0:
+            raise Exception(f"Command failed with error: {stderr.decode()}")
+        return stdout.decode(), stderr.decode()
 
     def list(self) -> List[PM2Process]:
         stdout, stderr = self.execute_command(self.COMMAND + ["jlist"])
