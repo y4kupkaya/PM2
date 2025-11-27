@@ -1,0 +1,138 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pm2"
+version = "1.0.0"
+description = "Professional Python wrapper for PM2 (Process Manager 2) with async support"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+authors = [{ name = "y4kupkaya", email = "contact@yakupkaya.me" }]
+maintainers = [{ name = "y4kupkaya", email = "contact@yakupkaya.me" }]
+keywords = [
+    "process-manager",
+    "pm2",
+    "pm2-wrapper",
+    "async",
+    "process-monitoring",
+    "devops",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Operating System :: POSIX",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Topic :: System :: Systems Administration",
+    "Topic :: System :: Monitoring",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Utilities",
+]
+requires-python = ">=3.8"
+dependencies = ["aiofiles>=0.8.0"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "pytest-cov>=2.10",
+    "pytest-asyncio>=0.18",
+    "black>=22.0",
+    "flake8>=4.0",
+    "mypy>=0.910",
+    "pre-commit>=2.15",
+    "sphinx>=4.0",
+    "sphinx-rtd-theme>=1.0",
+]
+test = ["pytest>=6.0", "pytest-asyncio>=0.18", "pytest-cov>=2.10"]
+docs = ["sphinx>=4.0", "sphinx-rtd-theme>=1.0", "myst-parser>=0.18"]
+
+[project.urls]
+Homepage = "https://projects.yakupkaya.me/pm2"
+Documentation = "https://docs.yakupkaya.me/pm2"
+Repository = "https://github.com/y4kupkaya/PM2"
+"Bug Reports" = "https://github.com/y4kupkaya/PM2/issues"
+Changelog = "https://github.com/y4kupkaya/PM2/blob/main/CHANGELOG.md"
+
+[tool.setuptools]
+packages = ["pm2"]
+
+[tool.setuptools.package-data]
+pm2 = ["py.typed"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    \.git
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q --strict-markers --strict-config"
+testpaths = ["tests"]
+markers = [
+    "integration: marks tests as integration tests (deselect with '-m \"not integration\"')",
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "unit: marks tests as unit tests",
+]
+
+[tool.coverage.run]
+source = ["pm2"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+show_missing = true
+skip_covered = false
